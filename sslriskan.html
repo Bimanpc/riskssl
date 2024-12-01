@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL Check Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SSL Check Tool</h1>
+        <p>Enter a domain or URL to check its SSL security:</p>
+        <form id="sslCheckForm">
+            <input type="text" id="domain" name="domain" placeholder="e.g., https://example.com" required>
+            <button type="submit">Check SSL</button>
+        </form>
+        <div id="result" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('sslCheckForm');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const domain = document.getElementById('domain').value;
+
+            resultDiv.textContent = 'Checking SSL...';
+
+            // Simulate an SSL check API call (replace with your back-end logic or API endpoint)
+            try {
+                const response = await fetch(`/api/ssl-check?domain=${encodeURIComponent(domain)}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `<strong>SSL Status:</strong> ${data.sslStatus}<br>
+                                           <strong>Issuer:</strong> ${data.issuer}<br>
+                                           <strong>Valid Until:</strong> ${data.validUntil}`;
+                } else {
+                    resultDiv.textContent = 'Failed to check SSL. Please try again.';
+                }
+            } catch (error) {
+                resultDiv.textContent = 'Error: Could not fetch SSL details.';
+            }
+        });
+    </script>
+</body>
+</html>
